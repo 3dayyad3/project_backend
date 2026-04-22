@@ -3,11 +3,15 @@ const Counter = require("../model/counter.js")
 const Stock = require("../model/stock.js")
 const User = require("../model/user.js")
 const Event = require("../model/event.js")
+const RespondFormat = require("../respondFormat.js")
 
 module.exports = (app) => {
   app.get("/api/ticket", async (req, res) => {
     const ticketData = await Ticket.find({})
-    res.status(200).json(ticketData)
+    if (ticketData.length === 0) {
+      res.status(404).json(new RespondFormat(false, "Tickets data not found"))
+    }
+    res.status(200).json(new RespondFormat(true, "Tickets data found", ticketData))
   })
 
   app.get("/api/ticket/:id", async (req, res) => {
@@ -15,11 +19,11 @@ module.exports = (app) => {
       const id = new Number(req.params.id)
       const ticketData = await Ticket.findOne({id: id})
       if (ticketData === null) {
-        res.status(404).json("ticket data not found")
+       res.status(404).json(new RespondFormat(false, `Ticket data with id ${id} not Found`))
       }
-      res.status(200).json(ticketData)
+      res.status(200).json(new RespondFormat(true, `Ticket data with id ${id} Found`, [ticketData]))
     } catch (error) {
-      res.status(400).json(error)
+      res.status(400).json(new RespondFormat(false, error.message))
     }
   })
 
@@ -35,24 +39,24 @@ module.exports = (app) => {
           if (value === null) {
             result += `${key} not Found. `
           }})
-          res.status(404).json(result)
+          res.status(404).json(new RespondFormat(false, result))
       }
 
       const stock = await Stock.findOne({ref_event: refEvent._id})
       if (stock === null) {
-        res.status(404).json(`Event doesnt have a stock`)
+        res.status(404).json(new RespondFormat(false,"Event doesnt have stock"))
       }
 
 
       if (req.body.status === "vip") {
         if (stock.amount.vip < req.body.amount) {
-          res.status(404).json(`Event doesnt have enought vip ticket`)
+          res.status(404).json(new RespondFormat(false, `Event doesnt have enought vip ticket`))
         }
       }
 
       if (req.body.status === "regular") {
         if (stock.amount.regular < req.body.amount) {
-          res.status(404).json(`Event doesnt have enought regular ticket`)
+          res.status(404).json(new RespondFormat(false, `Event doesnt have enought regular ticket`))
         }
       }
 
@@ -80,15 +84,18 @@ module.exports = (app) => {
       }
 
       const savedTicket =  await newTicket.save()
-      res.status(201).json(savedTicket)
+      res.status(201).json(new RespondFormat(true, `Ticket data is saved`, [savedTicket]))
     } catch (error) {
-      res.status(400).json(error)
+      res.status(400).json(new RespondFormat(false, error.message))
     }
   })
 
   app.put("/api/ticket", async (req, res) => {
     await Ticket.findOneAndUpdate({id: req.body.id}, {amount: req.body.amount, status: req.body.status})
     const ticket = await Ticket.findOne({id: req.body.id})
+    if (ticket === null){
+      res.status(404).json(new RespondFormat(false, `Ticket dengan id ${req.body.id} not found`))
+    }
     const stock = await Stock.findOne({ref_event: ticket.ref_event})
     if (ticket.status === "vip") {
       ticket.total = ticket.amount * stock.price.vip
@@ -96,19 +103,23 @@ module.exports = (app) => {
       ticket.total = ticket.amount * stock.price.regular
     }
     await Ticket.findOneAndUpdate({id: req.body.id}, {total: ticket.total})
-    res.status(201).json("update")
+    res.status(201).json(new RespondFormat(true, `Ticket data is updated`, [await Ticket.findOne({id: req.body.id})]))
   })
 
   app.delete("/api/ticket", async (req, res) => {
     const deleted = await Ticket.deleteMany({})
     Counter.findOneAndUpdate({name: "ticket"}, {seq: 0})
-    res.status(200).json(deleted)
+    if (deleted.deletedCount === 0) {
+      res.status(404).json(new RespondFormat(false, "Ticket data is empty"))
+    }
+    res.status(200).json(new RespondFormat(true, `${deleted.deletedCount} data is deleted`))
   })
 
   app.delete("/api/ticket/id/:id", async (req, res) => {
     const deleted = await Ticket.deleteOne({id: req.params.id})
-    const highestId = (await Ticket.find({}).sort({id:-1}).limit(1))[0]
-    await Counter.findOneAndUpdate({name: "ticket"}, {seq: highestId.id + 1})
-    res.status(200).json(deleted)
+    if (deleted.deletedCount === 0) {
+      res.status(404).json(new RespondFormat(false, `Ticket data with ${id} is empty`))
+    }
+    res.status(200).json(new RespondFormat(true, `${deleted.deletedCount} data is deleted`))
   })
 }

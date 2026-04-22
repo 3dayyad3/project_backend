@@ -1,18 +1,27 @@
 const Stock = require("../model/stock.js")
 const Event = require("../model/event.js")
+const RespondFormat = require("../respondFormat.js")
 
 module.exports = (app) => {
   app.get("/api/stock", async (req, res) => {
-    res.status(200).send(await Stock.find({}))
+    const stockData =  await Stock.find({})
+    if (stockData.length === 0) {
+      res.status(404).send(new RespondFormat(false, "Stocks data not found"))
+    }
+    res.status(200).send(new RespondFormat(true, "Stocks data found", stockData))
   })
 
   app.get("/api/stock/id/:id", async (req, res) => {
     try {
       const id = new Number(req.params.id)
       const refEvent = await Event.findOne({id: id})
-      res.status(201).json(await Stock.findOne({ref_event: refEvent._id}))
+      const stockData = await Stock.findOne({ref_event: refEvent._id})
+      if (stockData === null) {
+        res.status(404).json(new RespondFormat(false, `Stock with Event id ${id} not found`))
+      }
+      res.status(200).json(new RespondFormat(true, `Stock with Event id ${id} found`, stockData))
     } catch (error) {
-      res.status(404).json(error)
+      res.status(404).json(new RespondFormat(false, error.message))
     }
   })
 
@@ -20,7 +29,7 @@ module.exports = (app) => {
     try {
       const refEvent = await Event.findOne({id: req.body.ref_event_id})
       if (refEvent === null) {
-        res.send(404).json(`${req.body.ref_event_id} is not found`)
+        res.send(404).json(new RespondFormat(false, `${req.body.ref_event_id} is not found`))
       }
 
       const newStock = new Stock({
@@ -34,19 +43,17 @@ module.exports = (app) => {
           regular: req.body.price.regular
         }
       })
-      const savedStock = await newStock.save()
-      res.status(200).json(savedStock)
+      res.status(200).json(new RespondFormat(true, "Data save", [await newStock.save()]))
     } catch (error) {
-      res.status(400).json(error.message)
+      res.status(400).json(new RespondFormat(false, error.message))
     }
   })
 
   app.put("/api/stock", async (req, res) => {
     try {
-
       const eventRef = await Event.findOne({id: req.body.ref_event_id})
       if (eventRef === null) {
-        res.status(404).json(`Stock with evennt id ${req.body.ref_event_id} not found`)
+        res.status(404).json(new RespondFormat(false, `Stock with event id ${req.body.ref_event_id} not found`))
       }
 
       const newStock = await Stock.findOneAndUpdate({ref_event: eventRef._id},
@@ -61,24 +68,31 @@ module.exports = (app) => {
           }
         }
       )
-
-      res.status(200).json(newStock)
+      res.status(200).json(new RespondFormat(true, "Data Saved", [await Stock.findOne({ref_event: eventRef._id})]))
     } catch (error) {
-      res.status(404).json(error)
+      res.status(404).json(new RespondFormat(false, error.message))
     }
   })
 
   app.delete("/api/stock", async (req, res) => {
-    res.status(200).json(await Stock.deleteMany({}))
+    const deleted = await Stock.deleteMany({})
+    if (deleted.deletedCount === 0) {
+      res.status(404).json(new RespondFormat(true, `Stock data with id ${id} not avaible`))
+    }
+    res.status(200).json(new RespondFormat(true, `${deleted.deletedCount} data deleted`))
   })
 
   app.delete("/api/stock/id/:id", async (req, res) => {
     try {
       const id = new Number(req.params.id)
       const refEvent = await Event.findOne({id: id})
-      res.status(200).send(await Stock.deleteOne({ref_event: refEvent._id}))
+      const deleted = await Stock.deleteOne({ref_event: refEvent._id})
+      if (deleted.deletedCount === 0) {
+        res.status(404).json(new RespondFormat(true, `Stock data with id ${id} not avaible`))
+      }
+      res.status(200).json(new RespondFormat(true, `${deleted.deletedCount} data deleted`))
     } catch (error) {
-      res.status.json(error)
+      res.status(404).json(new RespondFormat(false, error.message))
     }
   })
 }

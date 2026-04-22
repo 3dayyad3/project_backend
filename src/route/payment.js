@@ -76,15 +76,10 @@ module.exports = (app) => {
       }
 
       const ticketPayed = await Payment.findOneAndUpdate({id: id}, {status_payment: "success"})
-      res.status(200).json(ticketPayed)
+      res.status(201).json(ticketPayed)
     } catch (error) {
       res.status(400).json(error)
     }
-  })
-
-  app.put("/api/payment", async (req, res) => {
-    const updated = await Payment.findOneAndUpdate({id: req.body.id}, {status_payment: req.body.status_payment})
-    res.status(200).json(updated)
   })
 
   app.delete("/api/payment", async (req, res) => {

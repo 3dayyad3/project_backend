@@ -1,0 +1,20 @@
+{
+  "name": "project_backend",
+  "version": "1.0.0",
+  "description": "",
+  "license": "GPL-3.0",
+  "author": "",
+  "type": "commonjs",
+  "main": "./src/server.js",
+  "scripts": {
+    "build": "npx nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.4.1",
+    "mongoose-autopopulate": "^1.2.1",
+    "nodemon": "^3.1.14"
+  }
+}

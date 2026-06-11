@@ -10,6 +10,7 @@ module.exports = (app) => {
     if (dataPayment.length === 0) {
       res.status(404).json(new RespondFormat(false, 'Payments not found'));
     }
+    kz;
     res
       .status(200)
       .json(new RespondFormat(true, 'Payments found', dataPayment));

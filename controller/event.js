@@ -1,4 +1,5 @@
 const RespondFormat = require('../respondFormat.js');
+const Event = require('../model/event.js');
 
 const getEvent = async (req, res) => {
   const eventData = await Event.find({});

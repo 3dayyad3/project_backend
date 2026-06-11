@@ -5,9 +5,9 @@
   "license": "GPL-3.0",
   "author": "",
   "type": "commonjs",
-  "main": "./src/server.js",
+  "main": "app.js",
   "scripts": {
-    "build": "npx nodemon",
+    "start": "npx nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

@@ -1,5 +1,6 @@
 const RespondFormat = require('../respondFormat.js');
 const Event = require('../model/event.js');
+const Counter = require('../model/counter.js');
 
 const getEvent = async (req, res) => {
   const eventData = await Event.find({});

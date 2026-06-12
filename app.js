@@ -24,6 +24,8 @@ const initServer = () => {
 app.set('view engine', 'ejs');
 app.set('views', `${__dirname}/view`);
 
+app.use(express.json());
+
 const eventRoute = require('./route/event.js');
 const paymentRoute = require('./route/payment.js');
 const userRoute = require('./route/user.js');

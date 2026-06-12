@@ -1,6 +1,3 @@
-const Event = require('../model/event.js');
-const Counter = require('../model/counter.js');
-const RespondFormat = require('../respondFormat.js');
 const eventController = require('../controller/event.js');
 
 module.exports = (app) => {

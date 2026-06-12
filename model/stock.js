@@ -1,39 +1,39 @@
-const mongoose = require("mongoose")
-const autopopulate = require("mongoose-autopopulate")
-const ObjectId = mongoose.Types.ObjectId
+const mongoose = require('mongoose');
+const autopopulate = require('mongoose-autopopulate');
+const ObjectId = mongoose.Types.ObjectId;
 
 const stockSchema = new mongoose.Schema({
   ref_event: {
     type: ObjectId,
-    ref: "Event",
+    ref: 'Event',
     required: true,
     unique: true,
-    autopopulate: true
+    autopopulate: true,
   },
   amount: {
     vip: {
       type: Number,
-      required: true
+      required: true,
     },
     regular: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   price: {
     vip: {
       type: Number,
-      required: true
+      required: true,
     },
     regular: {
       type: Number,
-      required: true
-    }
-  }
-})
+      required: true,
+    },
+  },
+});
 
-stockSchema.plugin(autopopulate)
+stockSchema.plugin(autopopulate);
 
-const Stock = mongoose.model("Stock", stockSchema);
+const Stock = mongoose.model('Stock', stockSchema);
 
-module.exports = Stock
+module.exports = Stock;

@@ -1,9 +1,3 @@
-const Ticket = require('../model/ticket.js');
-const Counter = require('../model/counter.js');
-const Stock = require('../model/stock.js');
-const User = require('../model/user.js');
-const Event = require('../model/event.js');
-const RespondFormat = require('../respondFormat.js');
 const ticketController = require('../controller/ticket.js');
 
 module.exports = (app) => {

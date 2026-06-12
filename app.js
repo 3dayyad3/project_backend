@@ -21,6 +21,8 @@ const initServer = () => {
   }
 };
 
+app.use(express.json());
+
 app.set('view engine', 'ejs');
 app.set('views', `${__dirname}/view`);
 

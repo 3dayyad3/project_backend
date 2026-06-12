@@ -1,7 +1,8 @@
 const ticketController = require('../controller/ticket.js');
+const auth = require('../middleware/auth.js');
 
 module.exports = (app) => {
-  app.get('/api/ticket', ticketController.getTicket);
+  app.get('/api/ticket', auth, ticketController.getTicket);
   app.get('/api/ticket/:id', ticketController.getTicketId);
   app.post('/api/ticket', ticketController.postTicket);
   app.put('/api/ticket', ticketController.putTicket);

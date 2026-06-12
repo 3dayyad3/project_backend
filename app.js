@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const app = express();
-// message
+
 const initServer = () => {
   try {
     console.log('');
@@ -27,13 +27,13 @@ app.set('views', `${__dirname}/view`);
 const eventRoute = require('./route/event.js');
 const paymentRoute = require('./route/payment.js');
 const userRoute = require('./route/user.js');
+const ticketRoute = require('./route/ticket.js');
+const stockRoute = require('./route/stock.js');
 
 app.use('/api', eventRoute);
 app.use('/api', paymentRoute);
 app.use('/api', userRoute);
-
-require('./route/ticket.js')(app);
-require('./route/stock.js')(app);
-require('./route/payment.js')(app);
+app.use('/api', ticketRoute);
+app.use('/api', stockRoute);
 
 initServer();

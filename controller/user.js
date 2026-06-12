@@ -1,11 +1,12 @@
-const getUser = (req, res) => {
-  async (req, res) => {
-    const userData = await User.find({});
-    if (userData.length === 0) {
-      res.status(404).json(new RespondFormat(false, 'Users data not found'));
-    }
-    res.status(200).json(new RespondFormat(true, 'User Data found', userData));
-  };
+const User = require('../model/user.js');
+const RespondFormat = require('../respondFormat.js');
+
+const getUser = async (req, res) => {
+  const userData = await User.find({});
+  if (userData.length === 0) {
+    res.status(404).json(new RespondFormat(false, 'Users data not found'));
+  }
+  res.status(200).json(new RespondFormat(true, 'User Data found', userData));
 };
 
 const getUserEmail = async (req, res) => {

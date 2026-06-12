@@ -21,13 +21,17 @@ const initServer = () => {
   }
 };
 
-app.use(express.json());
-
 app.set('view engine', 'ejs');
 app.set('views', `${__dirname}/view`);
 
-require('./route/user.js')(app);
-require('./route/event.js')(app);
+const eventRoute = require('./route/event.js');
+const paymentRoute = require('./route/payment.js');
+const userRoute = require('./route/user.js');
+
+app.use('/api', eventRoute);
+app.use('/api', paymentRoute);
+app.use('/api', userRoute);
+
 require('./route/ticket.js')(app);
 require('./route/stock.js')(app);
 require('./route/payment.js')(app);

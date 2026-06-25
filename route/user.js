@@ -8,6 +8,7 @@ const router = require('express').Router();
 router.get('/user', userController.getUser);
 router.get('/user/email/:email', userController.getUserEmail);
 router.get('/user/name/:name', userController.getUserEmail);
+router.post('/user/login', authMiddleware.userToken);
 router.post('/user', authMiddleware.verifyAdminToken, userController.postUser);
 router.put('/user', authMiddleware.verifyAdminToken, userController.putUser);
 router.delete(

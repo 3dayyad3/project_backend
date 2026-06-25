@@ -7,7 +7,7 @@ const getAdmin = async (req, res) => {
   if (adminData.length === 0) {
     res.status(404).json(new RespondFormat(false, 'Admin is empty'));
   }
-  res.status(200).json(new RespondFormat(true, 'Admin data found', eventData));
+  res.status(200).json(new RespondFormat(true, 'Admin data found', adminData));
 };
 
 const postAdmin = async (req, res) => {
@@ -29,5 +29,4 @@ const postAdmin = async (req, res) => {
 module.exports = {
   getAdmin,
   postAdmin,
-  loginAdmin,
 };

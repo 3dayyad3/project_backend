@@ -1,9 +1,11 @@
 const User = require('../model/user.js');
 const RespondFormat = require('../respondFormat.js');
 const userController = require('../controller/user.js');
+const adminController = require('../controller/admin.js');
 
 const router = require('express').Router();
 
+router.post('/admin', adminController.login);
 router.get('/user', userController.getUser);
 router.get('/user/email/:email', userController.getUserEmail);
 router.get('/user/name/:name', userController.getUserEmail);

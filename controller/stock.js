@@ -104,7 +104,7 @@ const deleteStock = async (req, res) => {
   if (deleted.deletedCount === 0) {
     res
       .status(404)
-      .json(new RespondFormat(true, `Stock data with id ${id} not avaible`));
+      .json(new RespondFormat(true, `${deleted.deletedCount} deleted`));
   }
   res
     .status(200)

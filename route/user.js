@@ -2,7 +2,11 @@ const User = require('../model/user.js');
 const RespondFormat = require('../respondFormat.js');
 const userController = require('../controller/user.js');
 <<<<<<< HEAD
+<<<<<<< HEAD
 const adminController = require('../controller/admin.js');
+=======
+const authMiddleware = require('../middleware/auth.js');
+>>>>>>> 65f01171180dbfa98960e21177a546b2fc54b128
 =======
 const authMiddleware = require('../middleware/auth.js');
 >>>>>>> 65f01171180dbfa98960e21177a546b2fc54b128

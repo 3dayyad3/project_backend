@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const User = require('../model/user');
 const jwt = require('jsonwebtoken');
 const config = require('../config/jwt');
@@ -18,6 +19,8 @@ exports.login = async (req, res) => {
   });
 };
 
+=======
+>>>>>>> 65f01171180dbfa98960e21177a546b2fc54b128
 const RespondFormat = require('../respondFormat.js');
 
 const Admin = require('../model/admin.js');

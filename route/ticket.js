@@ -1,7 +1,7 @@
 const ticketController = require('../controller/ticket.js');
 const authMiddleware = require('../middleware/auth.js');
 const router = require('express').Router();
-
+// coment
 router.get('/ticket', ticketController.getTicket);
 router.get('/ticket/:id', ticketController.getTicketId);
 router.post(

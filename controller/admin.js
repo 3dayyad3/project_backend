@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const User = require('../model/user');
 const jwt = require('jsonwebtoken');
 const config = require('../config/jwt');
@@ -17,7 +16,7 @@ exports.login = async (req, res) => {
     message: 'Login berhasil',
     token: token,
   });
-=======
+
 const RespondFormat = require('../respondFormat.js');
 
 const Admin = require('../model/admin.js');
@@ -49,5 +48,4 @@ const postAdmin = async (req, res) => {
 module.exports = {
   getAdmin,
   postAdmin,
->>>>>>> 65f01171180dbfa98960e21177a546b2fc54b128
 };

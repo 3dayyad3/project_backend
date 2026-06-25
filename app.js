@@ -33,11 +33,13 @@ const paymentRoute = require('./route/payment.js');
 const userRoute = require('./route/user.js');
 const ticketRoute = require('./route/ticket.js');
 const stockRoute = require('./route/stock.js');
+const adminRoute = require('./route/admin.js');
 
 app.use('/api', eventRoute);
 app.use('/api', paymentRoute);
 app.use('/api', userRoute);
 app.use('/api', ticketRoute);
 app.use('/api', stockRoute);
+app.use('/api', adminRoute);
 
 initServer();

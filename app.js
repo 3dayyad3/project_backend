@@ -43,7 +43,7 @@ app.use('/api', paymentRoute);
 app.use('/api', userRoute);
 app.use('/api', ticketRoute);
 app.use('/api', stockRoute);
-//= dsddfdsf
+
 app.use('/api', adminRoute);
 
 const homePageRoute = require('./route/homePage.js');

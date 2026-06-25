@@ -32,7 +32,7 @@ exports.verifyAdminToken = (req, res, next) => {
         .status(401)
         .json(new RespondFormat(false, 'Token admin tidak valid'));
     }
-    // req.user = decoded;
+    req.admin = decoded;
     next();
   });
 };
@@ -65,8 +65,6 @@ exports.verifyUserToken = (req, res, next) => {
         .json(new RespondFormat(false, 'Token user tidak valid'));
     }
     req.user = decoded;
-    console.log(decoded);
-    console.log(decoded);
     next();
   });
 };

@@ -6,13 +6,6 @@ const config = require('../config/jwt.js');
 const RespondFormat = require('../respondFormat.js');
 
 let adminToken = '';
-const Admin = require('../model/admin.js');
-const User = require('../model/user.js');
-const config = require('../config/jwt.js');
-
-const RespondFormat = require('../respondFormat.js');
-
-let adminToken = '';
 
 exports.adminToken = async (req, res) => {
   const { email, password } = req.body;

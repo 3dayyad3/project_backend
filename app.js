@@ -1,7 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
+const path = require('path');
 const app = express();
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'view'));
+app.use(express.static(path.join(__dirname, 'view')));
 
 const initServer = () => {
   try {
@@ -41,5 +44,9 @@ app.use('/api', userRoute);
 app.use('/api', ticketRoute);
 app.use('/api', stockRoute);
 app.use('/api', adminRoute);
+
+const homePageRoute = require('./route/homePage.js');
+
+app.use('', homePageRoute);
 
 initServer();

@@ -6,6 +6,13 @@ const config = require('../config/jwt.js');
 const RespondFormat = require('../respondFormat.js');
 
 let adminToken = '';
+const Admin = require('../model/admin.js');
+const User = require('../model/user.js');
+const config = require('../config/jwt.js');
+
+const RespondFormat = require('../respondFormat.js');
+
+let adminToken = '';
 
 exports.adminToken = async (req, res) => {
   const { email, password } = req.body;
@@ -33,8 +40,6 @@ exports.verifyAdminToken = (req, res, next) => {
         .json(new RespondFormat(false, 'Token admin tidak valid'));
     }
     // req.user = decoded;
-<<<<<<< HEAD
-=======
     next();
   });
 };
@@ -68,42 +73,7 @@ exports.verifyUserToken = (req, res, next) => {
     }
     req.user = decoded;
     console.log(decoded);
->>>>>>> 65f01171180dbfa98960e21177a546b2fc54b128
-    next();
-  });
-};
-
-let userToken = '';
-
-exports.userToken = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email: email, password: password });
-  if (!user) {
-    return res.status(401).json(new RespondFormat(false, 'Login Gagal'));
-  }
-  userToken = jwt.sign({ id: user.id, email: user.email }, config.secret, {
-    expiresIn: config.expiresIn,
-  });
-
-  res.json(new RespondFormat(true, 'Login berhasil'));
-};
-
-exports.verifyUserToken = (req, res, next) => {
-  if (userToken === '') {
-    return res
-      .status(403)
-      .json(new RespondFormat(false, 'Token user tidak ada'));
-  }
-  jwt.verify(userToken, config.secret, (err, decoded) => {
-    if (err) {
-      return res
-        .status(401)
-        .json(new RespondFormat(false, 'Token user tidak valid'));
-    }
-    req.user = decoded;
     console.log(decoded);
     next();
   });
 };
-
-

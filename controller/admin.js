@@ -16,6 +16,7 @@ exports.login = async (req, res) => {
     message: 'Login berhasil',
     token: token,
   });
+};
 
 const RespondFormat = require('../respondFormat.js');
 

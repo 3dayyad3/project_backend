@@ -1,10 +1,20 @@
 const paymentController = require('../controller/payment.js');
+const authMiddleware = require('../middleware/auth.js');
+
 const router = require('express').Router();
 
 router.get('/payment', paymentController.getPayment);
 router.get('/payment/:id', paymentController.getPaymentId);
-router.post('/payment', paymentController.postPayment);
-router.put('/payment/pay/:id', paymentController.putPaymentId);
+router.post(
+  '/payment',
+  authMiddleware.verifyAdminToken,
+  paymentController.postPayment,
+);
+router.put(
+  '/payment/pay/:id',
+  authMiddleware.verifyAdminToken,
+  paymentController.putPaymentId,
+);
 router.delete('/payment', paymentController.deletePayment);
 router.delete('/payment/:id', paymentController.deletePaymentId);
 

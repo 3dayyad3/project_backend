@@ -5,7 +5,7 @@ const RespondFormat = require('../respondFormat.js');
 const getStock = async (req, res) => {
   const stockData = await Stock.find({});
   if (stockData.length === 0) {
-    res.status(404).send(new RespondFormat(false, 'Stocks data not found'));
+    res.status(404).send(new RespondFormat(false, 'Stocks data is empty'));
   }
   res.status(200).send(new RespondFormat(true, 'Stocks data found', stockData));
 };

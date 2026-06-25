@@ -1,7 +1,11 @@
 const User = require('../model/user.js');
 const RespondFormat = require('../respondFormat.js');
 const userController = require('../controller/user.js');
+<<<<<<< HEAD
 const adminController = require('../controller/admin.js');
+=======
+const authMiddleware = require('../middleware/auth.js');
+>>>>>>> 65f01171180dbfa98960e21177a546b2fc54b128
 
 const router = require('express').Router();
 
@@ -9,11 +13,28 @@ router.post('/admin', adminController.login);
 router.get('/user', userController.getUser);
 router.get('/user/email/:email', userController.getUserEmail);
 router.get('/user/name/:name', userController.getUserEmail);
-router.post('/user', userController.postUser);
-router.put('/user', userController.putUser);
-router.delete('/user', userController.deleteUser);
-router.delete('/user/name/:name', userController.deleteUserName);
-router.delete('/user/name', userController.deleteUserWithEmptyName);
-router.delete('/user/email/:email', userController.deleteUserEmail);
+router.post('/user/login', authMiddleware.userToken);
+router.post('/user', authMiddleware.verifyAdminToken, userController.postUser);
+router.put('/user', authMiddleware.verifyAdminToken, userController.putUser);
+router.delete(
+  '/user',
+  authMiddleware.verifyAdminToken,
+  userController.deleteUser,
+);
+router.delete(
+  '/user/name/:name',
+  authMiddleware.verifyAdminToken,
+  userController.deleteUserName,
+);
+router.delete(
+  '/user/name',
+  authMiddleware.verifyAdminToken,
+  userController.deleteUserWithEmptyName,
+);
+router.delete(
+  '/user/email/:email',
+  authMiddleware.verifyAdminToken,
+  userController.deleteUserEmail,
+);
 
 module.exports = router;

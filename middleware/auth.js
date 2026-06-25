@@ -1,21 +1,71 @@
 const jwt = require('jsonwebtoken');
-const RespondFormat = require('../respondFormat');
+const Admin = require('../model/admin.js');
+const User = require('../model/user.js');
+const config = require('../config/jwt.js');
 
-exports.verifyToken = (req, res, next) => {
-  const authHeader = req.headers.authorization;
+const RespondFormat = require('../respondFormat.js');
 
-  if (!authHeader) {
-    return res.status(401).json(new RespondFormat(false, 'Tidak Berhasil'));
+let adminToken = '';
+
+exports.adminToken = async (req, res) => {
+  const { email, password } = req.body;
+  const admin = await Admin.findOne({ email: email, password: password });
+  if (!admin) {
+    return res.status(401).json(new RespondFormat(false, 'Login Gagal'));
   }
+  adminToken = jwt.sign({ id: admin.id, email: admin.email }, config.secret, {
+    expiresIn: config.expiresIn,
+  });
 
-  const token = authHeader.split(' ')[1];
+  res.json(new RespondFormat(true, 'Login berhasil'));
+};
 
-  jwt.verify(token, 'SECRET_KEY', (err, decoded) => {
+exports.verifyAdminToken = (req, res, next) => {
+  if (adminToken === '') {
+    return res
+      .status(403)
+      .json(new RespondFormat(false, 'Token admin tidak ada'));
+  }
+  jwt.verify(adminToken, config.secret, (err, decoded) => {
     if (err) {
-      return res.status(403).json(new RespondFormat(false, 'Tidak Berhasil'));
+      return res
+        .status(401)
+        .json(new RespondFormat(false, 'Token admin tidak valid'));
     }
+    // req.user = decoded;
+    next();
+  });
+};
 
+let userToken = '';
+
+exports.userToken = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email: email, password: password });
+  if (!user) {
+    return res.status(401).json(new RespondFormat(false, 'Login Gagal'));
+  }
+  userToken = jwt.sign({ id: user.id, email: user.email }, config.secret, {
+    expiresIn: config.expiresIn,
+  });
+
+  res.json(new RespondFormat(true, 'Login berhasil'));
+};
+
+exports.verifyUserToken = (req, res, next) => {
+  if (userToken === '') {
+    return res
+      .status(403)
+      .json(new RespondFormat(false, 'Token user tidak ada'));
+  }
+  jwt.verify(userToken, config.secret, (err, decoded) => {
+    if (err) {
+      return res
+        .status(401)
+        .json(new RespondFormat(false, 'Token user tidak valid'));
+    }
     req.user = decoded;
+    console.log(decoded);
     next();
   });
 };

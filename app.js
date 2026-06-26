@@ -46,8 +46,8 @@ app.use('/api', ticketRoute);
 app.use('/api', stockRoute);
 app.use('/api', adminRoute);
 
-const homePageRoute = require('./route/homePage.js');
+const pageRoute = require('./route/page.js');
 
-app.use('', homePageRoute);
+app.use('', pageRoute);
 
 initServer();

@@ -1,4 +1,4 @@
-const homePage = (req, res) => {
+const loginPage = (req, res) => {
   res.render('auth/login');
 };
 
@@ -12,7 +12,7 @@ const rootPage = async (req, res, next) => {
 };
 
 module.exports = {
-  homePage,
+  loginPage,
   registerPage,
   rootPage,
 };

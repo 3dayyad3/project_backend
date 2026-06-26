@@ -1,16 +1,24 @@
 const stockController = require('../controller/stock.js');
 const authMiddleware = require('../middleware/auth.js');
-const adminMiddleware = require('../middleware/admin.js');
+
 const router = require('express').Router();
 
 router.get('/stock', authMiddleware.verifyUserToken, stockController.getStock);
 router.get('/stock/id/:id', stockController.getStockId);
-router.post('/stock', adminMiddleware.isAdmin, stockController.postStock);
-router.put('/stock', adminMiddleware.isAdmin, stockController.putStock);
-router.delete('/stock', adminMiddleware.isAdmin, stockController.deleteStock);
+router.post(
+  '/stock',
+  authMiddleware.verifyAdminToken,
+  stockController.postStock,
+);
+router.put('/stock', authMiddleware.verifyAdminToken, stockController.putStock);
+router.delete(
+  '/stock',
+  authMiddleware.verifyAdminToken,
+  stockController.deleteStock,
+);
 router.delete(
   '/stock/id/:id',
-  adminMiddleware.isAdmin,
+  authMiddleware.verifyAdminToken,
   stockController.getStockId,
 );
 router.post(

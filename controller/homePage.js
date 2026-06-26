@@ -11,8 +11,17 @@ const rootPage = async (req, res, next) => {
   next();
 };
 
+const dashboard = async (req, res) => {
+  res.render('auth/user/dashboard');
+};
+
+const dashboard = async (req, res) => {
+  res.render('auth/admin/dashboard');
+};
+
 module.exports = {
   homePage,
   registerPage,
   rootPage,
+  dashboard,
 };

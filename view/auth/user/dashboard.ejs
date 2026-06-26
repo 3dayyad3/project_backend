@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dashboard User</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #f4f4f4;
+      }
+
+      .navbar {
+        background: #1e293b;
+        color: white;
+        padding: 15px;
+      }
+
+      .container {
+        display: flex;
+      }
+
+      .content {
+        flex: 3;
+        padding: 20px;
+      }
+
+      .cart {
+        flex: 1;
+        background: white;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .card {
+        background: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+      }
+
+      button {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <h2>Dashboard User</h2>
+    </div>
+
+    <div class="container">
+      <div class="content">
+        <h2>Daftar Event</h2>
+
+        <div class="card">
+          <h3>Konser Coldplay</h3>
+          <p>Regular : Rp500.000</p>
+          <p>VIP : Rp1.500.000</p>
+
+          <button>Tambah Regular</button>
+          <button>Tambah VIP</button>
+        </div>
+
+        <div class="card">
+          <h3>Festival Musik</h3>
+          <p>Regular : Rp300.000</p>
+          <p>VIP : Rp900.000</p>
+
+          <button>Tambah Regular</button>
+          <button>Tambah VIP</button>
+        </div>
+      </div>
+
+      <div class="cart">
+        <h2>🛒 Keranjang</h2>
+
+        <h2>👤 Akun</h2>
+
+        <p><strong>Username :</strong> <%= user.name %></p>
+        <p><strong>Email :</strong> <%= user.email %></p>
+
+        <button onclick="location.href='/change-username'">
+          Ganti Username
+        </button>
+        <br><br>
+        <button onclick="location.href='/change-password'">
+          Ganti Password
+        </button>
+
+        <br><br>
+        <button
+          onclick="location.href='/logout'"
+          style="background:#dc2626;">
+          Logout
+        </button>
+
+<hr>
+        <p>Belum ada tiket.</p>
+
+        <hr />
+
+        <h3>Total</h3>
+        <p>Rp0</p>
+
+        <button>Checkout</button>
+      </div>
+    </div>
+  </body>
+</html>

@@ -3,12 +3,8 @@ const authMiddleware = require('../middleware/auth.js');
 
 const router = require('express').Router();
 
-router.get('/admin', authMiddleware.verifyAdminToken, adminContoller.getAdmin);
-router.post(
-  '/admin',
-  authMiddleware.verifyAdminToken,
-  adminContoller.postAdmin,
-);
+router.get('/admin', authMiddleware.verifyToken, adminContoller.getAdmin);
+router.post('/admin', authMiddleware.verifyToken, adminContoller.postAdmin);
 router.post('/admin/login', authMiddleware.adminToken);
 
 module.exports = router;

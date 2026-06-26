@@ -105,6 +105,7 @@ exports.verifyUserToken = (req, res, next) => {
         .json(new RespondFormat(false, 'Token user tidak valid'));
     }
     req.user = decoded;
+    console.log(req.user);
     next();
   });
 };

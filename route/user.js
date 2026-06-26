@@ -17,7 +17,7 @@ router.get('/user/email/:email', userController.getUserEmail);
 router.get('/user/name/:name', userController.getUserEmail);
 router.post('/user/login', authMiddleware.userToken);
 router.post('/user', userController.postUser);
-router.put('/user', authMiddleware.verifyAdminToken, userController.putUser);
+router.put('/user', authMiddleware.verifyToken, userController.putUser);
 router.delete(
   '/user',
   authMiddleware.verifyAdminToken,

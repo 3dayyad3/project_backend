@@ -20,6 +20,46 @@ exports.adminToken = async (req, res) => {
   res.json(new RespondFormat(true, 'Login berhasil'));
 };
 
+exports.verifyToken = (req, res, next) => {
+  if (req.params.role === 'user') {
+    if (adminToken === '') {
+      return res
+        .status(403)
+        .json(new RespondFormat(false, 'Token admin tidak ada'));
+    }
+    jwt.verify(adminToken, config.secret, (err, decoded) => {
+      if (err) {
+        return res
+          .status(401)
+          .json(new RespondFormat(false, 'Token admin tidak valid'));
+      }
+      req.admin = decoded;
+      next();
+    });
+  } else if (req.params.role === 'admin') {
+    if (userToken === '') {
+      return res
+        .status(403)
+        .json(new RespondFormat(false, 'Token user tidak ada'));
+    }
+    jwt.verify(userToken, config.secret, (err, decoded) => {
+      if (err) {
+        return res
+          .status(401)
+          .json(new RespondFormat(false, 'Token user tidak valid'));
+      }
+      req.user = decoded;
+      next();
+    });
+  } else {
+    res
+      .status(404)
+      .json(
+        new RespondFormat(false, 'Role ' + req.params.role + ' tidak dikenal'),
+      );
+  }
+};
+
 exports.verifyAdminToken = (req, res, next) => {
   if (adminToken === '') {
     return res

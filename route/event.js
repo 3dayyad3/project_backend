@@ -8,13 +8,13 @@ router.get('/event/id/:id', eventController.getEventId);
 
 router.post(
   '/event',
-  // authMiddleware.verifyAdminToken,
+  authMiddleware.verifyAdminToken,
   eventController.postEvent,
 );
 
 router.put('/event', authMiddleware.verifyAdminToken, eventController.putEvent);
 
-router.delete('/event/id/:id', authMiddleware.verifyAdminToken);
+router.delete('/event/id/:id', authMiddleware.adminToken);
 router.delete(
   '/event',
   authMiddleware.verifyAdminToken,
@@ -22,7 +22,7 @@ router.delete(
 );
 router.delete(
   '/event/id/:id',
-  // authMiddleware.verifyAdminToken,
+  authMiddleware.verifyAdminToken,
   eventController.deleteEventId,
 );
 

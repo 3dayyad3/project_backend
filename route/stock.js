@@ -3,7 +3,7 @@ const authMiddleware = require('../middleware/auth.js');
 
 const router = require('express').Router();
 
-router.get('/stock', authMiddleware.verifyAdminToken, stockController.getStock);
+router.get('/stock', authMiddleware.verifyToken, stockController.getStock);
 router.get('/stock/id/:id', stockController.getStockId);
 router.post(
   '/stock',

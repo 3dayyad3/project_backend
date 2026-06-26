@@ -15,9 +15,14 @@ const adminPage = (req, res) => {
   res.render('dashboard/admin');
 };
 
+const userPage = (req, res) => {
+  res.render('dashboard/user', { test: req.user });
+};
+
 module.exports = {
   loginPage,
   registerPage,
   rootPage,
   adminPage,
+  userPage,
 };

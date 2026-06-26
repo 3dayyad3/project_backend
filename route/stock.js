@@ -19,6 +19,22 @@ router.delete(
 router.delete(
   '/stock/id/:id',
   authMiddleware.verifyAdminToken,
+  stockController.getStockId,
+);
+router.post(
+  '/stock',
+  authMiddleware.verifyAdminToken,
+  stockController.postStock,
+);
+router.put('/stock', authMiddleware.verifyAdminToken, stockController.putStock);
+router.delete(
+  '/stock',
+  authMiddleware.verifyAdminToken,
+  stockController.deleteStock,
+);
+router.delete(
+  '/stock/id/:id',
+  authMiddleware.verifyAdminToken,
   stockController.deleteStockId,
 );
 

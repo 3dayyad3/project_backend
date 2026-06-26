@@ -1,7 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
+const path = require('path');
 const app = express();
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'view'));
+app.use(express.static(path.join(__dirname, 'view')));
 
 const initServer = () => {
   try {
@@ -13,7 +17,7 @@ const initServer = () => {
 
     const port = 8080;
     app.listen(port);
-    console.log(`localhost:${port}`);
+    console.log(`http://localhost:${port}`);
 
     console.log('');
   } catch (error) {
@@ -40,7 +44,10 @@ app.use('/api', paymentRoute);
 app.use('/api', userRoute);
 app.use('/api', ticketRoute);
 app.use('/api', stockRoute);
-//= dsddfdsf (rqj2bfewhwfwhefbwh)
 app.use('/api', adminRoute);
+
+const homePageRoute = require('./route/homePage.js');
+
+app.use('', homePageRoute);
 
 initServer();

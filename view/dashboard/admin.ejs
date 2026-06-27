@@ -1,17 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard Admin</title>
 
     <style>
-      body {
-        font-family: Arial, sans-serif;
+      * {
         margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
         background: #f4f4f4;
       }
 
-      .navbar {
-        background: #111827;
+      header {
+        background: #1f2937;
         color: white;
         padding: 15px;
       }
@@ -20,17 +27,75 @@
         padding: 20px;
       }
 
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
       .card {
         background: white;
         padding: 20px;
-        margin-bottom: 20px;
         border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .card h3 {
+        margin-bottom: 10px;
+      }
+
+      .section {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .section h2 {
+        margin-bottom: 15px;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      button {
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .btn-add {
+        background: green;
+        color: white;
+      }
+
+      .btn-edit {
+        background: orange;
+        color: white;
+      }
+
+      .btn-delete {
+        background: red;
+        color: white;
+      }
+
+      .btn-payment {
+        background: blue;
+        color: white;
       }
 
       table {
         width: 100%;
         border-collapse: collapse;
-        background: white;
       }
 
       table th,
@@ -40,95 +105,373 @@
         text-align: center;
       }
 
-      button {
-        padding: 8px 12px;
-        border: none;
-        border-radius: 5px;
+      table th {
+        background: #1f2937;
         color: white;
-        cursor: pointer;
       }
 
-      .edit {
-        background: orange;
-      }
-
-      .delete {
-        background: red;
-      }
-
-      .add {
-        background: green;
+      .search-box {
         margin-bottom: 15px;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-content {
+        background: white;
+        width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 10px;
       }
     </style>
   </head>
+
   <body>
-    <div class="navbar">
-      <h2>Dashboard Admin</h2>
-    </div>
+    <header>
+      <h1>Dashboard Admin - Ticket Concert</h1>
+    </header>
 
     <div class="container">
-      <div class="card">
-        <h3>Total Event : 2</h3>
-        <h3>Total Ticket : 500</h3>
-        <h3>Total Penjualan : Rp20.000.000</h3>
+      <!-- Statistik -->
+      <div class="cards">
+        <div class="card">
+          <h3>Total Event</h3>
+          <h2 id="totalEvent">0</h2>
+        </div>
+
+        <div class="card">
+          <h3>Total Ticket</h3>
+          <h2 id="totalTicket">0</h2>
+        </div>
+
+        <div class="card">
+          <h3>Ticket Sold</h3>
+          <h2 id="ticketSold">0</h2>
+        </div>
+
+        <div class="card">
+          <h3>Revenue</h3>
+          <h2 id="revenue">Rp0</h2>
+        </div>
       </div>
 
-      <h2>Kelola Event</h2>
+      <!-- Tambah Event -->
+      <div class="section">
+        <h2>Tambah Event</h2>
 
-      <button class="add">+ Tambah Event</button>
+        <input type="text" id="eventName" placeholder="Nama Event" />
 
-      <table>
-        <tr>
-          <th>Event</th>
-          <th>Regular</th>
-          <th>VIP</th>
-          <th>Stock</th>
-          <th>Aksi</th>
-        </tr>
+        <input type="number" id="regularPrice" placeholder="Harga Regular" />
 
-        <tr>
-          <td>Konser Coldplay</td>
-          <td>Rp500.000</td>
-          <td>Rp1.500.000</td>
-          <td>150</td>
-          <td>
-            <button class="edit">Edit</button>
-            <button class="delete">Hapus</button>
-          </td>
-        </tr>
+        <input type="number" id="vipPrice" placeholder="Harga VIP" />
+        <input type="number" id="discount" placeholder="Diskon (%)" />
 
-        <tr>
-          <td>Festival Musik</td>
-          <td>Rp300.000</td>
-          <td>Rp900.000</td>
-          <td>100</td>
-          <td>
-            <button class="edit">Edit</button>
-            <button class="delete">Hapus</button>
-          </td>
-        </tr>
-      </table>
+        <input type="number" id="stockRegular" placeholder="Stock Regular" />
 
-      <br />
+        <input type="number" id="stockVIP" placeholder="Stock VIP" />
 
-      <h2>Payment</h2>
+        <select id="statusEvent">
+          <option>Aktif</option>
+          <option>Selesai</option>
+        </select>
 
-      <table>
-        <tr>
-          <th>User</th>
-          <th>Event</th>
-          <th>Total</th>
-          <th>Status</th>
-        </tr>
+        <button class="btn-add" onclick="addEvent()">Tambah Event</button>
+      </div>
 
-        <tr>
-          <td>Putri</td>
-          <td>Konser Coldplay</td>
-          <td>Rp1.500.000</td>
-          <td>Lunas</td>
-        </tr>
-      </table>
+      <!-- Kelola Event -->
+      <div class="section">
+        <h2>Kelola Event</h2>
+
+        <input
+          class="search-box"
+          type="text"
+          id="searchInput"
+          placeholder="Cari Event..."
+          onkeyup="searchEvent()"
+        />
+
+        <table>
+          <thead>
+            <tr>
+              <th>Nama Event</th>
+              <th>Regular</th>
+              <th>VIP</th>
+              <th>Diskon</th>
+              <th>Stock Reg</th>
+              <th>Stock VIP</th>
+              <th>Regular Sold</th>
+              <th>VIP Sold</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody id="eventTable"></tbody>
+        </table>
+      </div>
+
+      <!-- Payment -->
+      <div class="section">
+        <h2>Payment</h2>
+
+        <table>
+          <tr>
+            <th>User</th>
+            <th>Event</th>
+            <th>Jumlah</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+
+          <tr>
+            <td colspan="5">Belum ada transaksi</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Data User -->
+      <div class="section">
+        <h2>Data User</h2>
+
+        <table>
+          <tr>
+            <th>Nama</th>
+            <th>Email</th>
+            <th>Total Pembelian</th>
+          </tr>
+
+          <tr>
+            <td colspan="3">Belum ada data user</td>
+          </tr>
+        </table>
+      </div>
     </div>
+
+    <!-- Modal Edit -->
+
+    <div class="modal" id="editModal">
+      <div class="modal-content">
+        <h2>Edit Event</h2>
+
+        <input type="text" id="editName" />
+
+        <input type="number" id="editRegular" />
+
+        <input type="number" id="editVIP" />
+        <input type="number" id="editDiscount" />
+
+        <input type="number" id="editStockReg" />
+
+        <input type="number" id="editStockVIP" />
+
+        <select id="editStatus">
+          <option>Aktif</option>
+          <option>Selesai</option>
+        </select>
+
+        <button class="btn-add" onclick="saveEdit()">Simpan</button>
+
+        <button class="btn-delete" onclick="closeModal()">Batal</button>
+      </div>
+    </div>
+
+    <script>
+      let events = [];
+      let currentIndex = -1;
+
+      function updateStats() {
+        document.getElementById("totalEvent").innerText = events.length;
+
+        let totalTicket = 0;
+        let sold = 0;
+        let revenue = 0;
+
+        events.forEach((e) => {
+          totalTicket += Number(e.stockReg) + Number(e.stockVIP);
+
+          sold += Number(e.soldRegular) + Number(e.soldVIP);
+
+          let regularPrice = Number(e.regular);
+
+          let vipPrice = Number(e.vip);
+
+          let discount = Number(e.discount);
+
+          regularPrice = regularPrice - (regularPrice * discount) / 100;
+
+          vipPrice = vipPrice - (vipPrice * discount) / 100;
+
+          revenue +=
+            Number(e.soldRegular) * regularPrice + Number(e.soldVIP) * vipPrice;
+        });
+
+        document.getElementById("totalTicket").innerText = totalTicket;
+
+        document.getElementById("ticketSold").innerText = sold;
+
+        document.getElementById("revenue").innerText = revenue.toLocaleString(
+          "id-ID",
+          {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+          },
+        );
+      }
+
+      function renderTable() {
+        let table = document.getElementById("eventTable");
+
+        table.innerHTML = "";
+
+        events.forEach((event, index) => {
+          table.innerHTML += `
+        <tr>
+
+            <td>${event.name}</td>
+            <td>Rp${event.regular}</td>
+            <td>Rp${event.vip}</td>
+            <td>${event.stockReg}</td>
+            <td>${event.stockVIP}</td>
+            <td>${event.discount}%</td>
+            <td>${event.soldRegular}</td>
+            <td>${event.soldVIP}</td>
+            <td>${event.status}</td>
+
+            <td>
+
+                <button
+                    class="btn-edit"
+                    onclick="editEvent(${index})">
+                    Edit
+                </button>
+
+                <button
+                    class="btn-delete"
+                    onclick="deleteEvent(${index})">
+                    Hapus
+                </button>
+
+            </td>
+
+        </tr>
+        `;
+        });
+
+        updateStats();
+      }
+
+      function addEvent() {
+        const data = {
+          name: document.getElementById("eventName").value,
+
+          regular: document.getElementById("regularPrice").value,
+
+          vip: document.getElementById("vipPrice").value,
+
+          discount: document.getElementById("discount").value || 0,
+
+          stockReg: document.getElementById("stockRegular").value,
+
+          stockVIP: document.getElementById("stockVIP").value,
+
+          soldRegular: 0,
+          soldVIP: 0,
+          status: document.getElementById("statusEvent").value,
+        };
+
+        if (data.name === "") {
+          alert("Nama event wajib diisi");
+          return;
+        }
+
+        events.push(data);
+
+        renderTable();
+
+        document.getElementById("eventName").value = "";
+        document.getElementById("regularPrice").value = "";
+        document.getElementById("vipPrice").value = "";
+        document.getElementById("stockRegular").value = "";
+        document.getElementById("stockVIP").value = "";
+      }
+
+      function deleteEvent(index) {
+        if (confirm("Hapus event ini?")) {
+          events.splice(index, 1);
+
+          renderTable();
+        }
+      }
+
+      function editEvent(index) {
+        currentIndex = index;
+
+        let e = events[index];
+
+        document.getElementById("editName").value = e.name;
+        document.getElementById("editRegular").value = e.regular;
+        document.getElementById("editVIP").value = e.vip;
+        document.getElementById("editDiscount").value = e.discount;
+        document.getElementById("editStockReg").value = e.stockReg;
+        document.getElementById("editStockVIP").value = e.stockVIP;
+        document.getElementById("editStatus").value = e.status;
+        document.getElementById("editModal").style.display = "block";
+      }
+
+      function saveEdit() {
+        events[currentIndex] = {
+          name: document.getElementById("editName").value,
+
+          regular: document.getElementById("editRegular").value,
+
+          vip: document.getElementById("editVIP").value,
+
+          stockReg: document.getElementById("editStockReg").value,
+
+          stockVIP: document.getElementById("editStockVIP").value,
+
+          discount: document.getElementById("editDiscount").value,
+
+          soldRegular: events[currentIndex].soldRegular,
+
+          soldVIP: events[currentIndex].soldVIP,
+
+          status: document.getElementById("editStatus").value,
+        };
+
+        renderTable();
+
+        closeModal();
+      }
+
+      function closeModal() {
+        document.getElementById("editModal").style.display = "none";
+      }
+
+      function searchEvent() {
+        let keyword = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+
+        let rows = document.querySelectorAll("#eventTable tr");
+
+        rows.forEach((row) => {
+          let text = row.innerText.toLowerCase();
+
+          row.style.display = text.includes(keyword) ? "" : "none";
+        });
+      }
+
+      renderTable();
+    </script>
   </body>
 </html>

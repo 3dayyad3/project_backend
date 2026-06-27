@@ -13,51 +13,15 @@ exports.adminToken = async (req, res) => {
   if (!admin) {
     return res.status(401).json(new RespondFormat(false, 'Login Gagal'));
   }
-  adminToken = jwt.sign({ id: admin.id, email: admin.email }, config.secret, {
-    expiresIn: config.expiresIn,
-  });
+  adminToken = jwt.sign(
+    { email: admin.email, name: admin.name },
+    config.secret,
+    {
+      expiresIn: config.expiresIn,
+    },
+  );
 
   res.json(new RespondFormat(true, 'Login berhasil'));
-};
-
-exports.verifyToken = (req, res, next) => {
-  if (req.params.role === 'user') {
-    if (adminToken === '') {
-      return res
-        .status(403)
-        .json(new RespondFormat(false, 'Token admin tidak ada'));
-    }
-    jwt.verify(adminToken, config.secret, (err, decoded) => {
-      if (err) {
-        return res
-          .status(401)
-          .json(new RespondFormat(false, 'Token admin tidak valid'));
-      }
-      req.admin = decoded;
-      next();
-    });
-  } else if (req.params.role === 'admin') {
-    if (userToken === '') {
-      return res
-        .status(403)
-        .json(new RespondFormat(false, 'Token user tidak ada'));
-    }
-    jwt.verify(userToken, config.secret, (err, decoded) => {
-      if (err) {
-        return res
-          .status(401)
-          .json(new RespondFormat(false, 'Token user tidak valid'));
-      }
-      req.user = decoded;
-      next();
-    });
-  } else {
-    res
-      .status(404)
-      .json(
-        new RespondFormat(false, 'Role ' + req.params.role + ' tidak dikenal'),
-      );
-  }
 };
 
 exports.verifyAdminToken = (req, res, next) => {
@@ -85,7 +49,7 @@ exports.userToken = async (req, res) => {
   if (!user) {
     return res.status(401).json(new RespondFormat(false, 'Login Gagal'));
   }
-  userToken = jwt.sign({ id: user.id, email: user.email }, config.secret, {
+  userToken = jwt.sign({ email: user.email, name: user.name }, config.secret, {
     expiresIn: config.expiresIn,
   });
 
@@ -105,7 +69,6 @@ exports.verifyUserToken = (req, res, next) => {
         .json(new RespondFormat(false, 'Token user tidak valid'));
     }
     req.user = decoded;
-    console.log(req.user);
     next();
   });
 };

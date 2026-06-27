@@ -2,7 +2,9 @@ const Payment = require('../model/payment.js');
 const Counter = require('../model/counter.js');
 const Ticket = require('../model/ticket.js');
 const Stock = require('../model/stock.js');
+const User = require('../model/user.js');
 const RespondFormat = require('../respondFormat.js');
+const { listeners } = require('../model/user.js');
 
 const getPayment = async (req, res) => {
   const dataPayment = await Payment.find({});
@@ -27,6 +29,23 @@ const getPaymentId = async (req, res) => {
   } catch (error) {
     res.status(400).json(new RespondFormat(false, error.message));
   }
+};
+
+const getCurrentUserPayment = async (req, res) => {
+  const ticket = await Ticket.find({
+    ref_user: await User.find({ email: req.user.email }),
+  });
+  if (ticket === null) {
+    res.status(404).json(new RespondFormat(false, 'User have no ticket'));
+  }
+  let currentUserPaymentData = [];
+  ticket.forEach(async (val) => {
+    const data = await Payment.find({ ref_ticket: val._id });
+    currentUserPaymentData += data;
+  });
+  res
+    .status(200)
+    .json(new RespondFormat(true, 'Payment Found', currentUserPaymentData));
 };
 
 const postPayment = async (req, res) => {
@@ -170,6 +189,7 @@ const deletePaymentId = async (req, res) => {
 
 module.exports = {
   getPayment,
+  getCurrentUserPayment,
   getPaymentId,
   postPayment,
   putPaymentId,

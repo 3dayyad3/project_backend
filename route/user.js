@@ -3,7 +3,9 @@ const RespondFormat = require('../respondFormat.js');
 const userController = require('../controller/user.js');
 const adminController = require('../controller/admin.js');
 const authMiddleware = require('../middleware/auth.js');
+
 const router = require('express').Router();
+
 router.get('/auth/login', (req, res) =>
   res.render('auth/login', { error: null }),
 );
@@ -17,7 +19,7 @@ router.get('/user/email/:email', userController.getUserEmail);
 router.get('/user/name/:name', userController.getUserEmail);
 router.post('/user/login', authMiddleware.userToken);
 router.post('/user', userController.postUser);
-router.put('/user', authMiddleware.verifyToken, userController.putUser);
+router.put('/user', userController.putUser);
 router.delete(
   '/user',
   authMiddleware.verifyAdminToken,

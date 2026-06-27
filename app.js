@@ -46,6 +46,16 @@ app.use('/api', ticketRoute);
 app.use('/api', stockRoute);
 app.use('/api', adminRoute);
 
+const userUserRoute = require('./route/api_user/user.js');
+const userTicketRoute = require('./route/api_user/ticket.js');
+const userStockRoute = require('./route/api_user/stock.js');
+const userPaymentRoute = require('./route/api_user/payment.js');
+
+app.use('/apiUser', userUserRoute);
+app.use('/apiUser', userTicketRoute);
+app.use('/apiUser', userStockRoute);
+app.use('/apiUser', userPaymentRoute);
+
 const pageRoute = require('./route/page.js');
 
 app.use('', pageRoute);

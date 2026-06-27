@@ -5,7 +5,7 @@ const Stock = require('../model/stock.js');
 const User = require('../model/user.js');
 const Event = require('../model/event.js');
 
-const getTicket = async (req, res) => {
+exports.getTicket = async (req, res) => {
   const ticketData = await Ticket.find({});
   if (ticketData.length === 0) {
     res.status(404).json(new RespondFormat(false, 'Tickets data not found'));
@@ -15,7 +15,7 @@ const getTicket = async (req, res) => {
     .json(new RespondFormat(true, 'Tickets data found', ticketData));
 };
 
-const getTicketId = async (req, res) => {
+exports.getTicketId = async (req, res) => {
   try {
     const id = new Number(req.params.id);
     const ticketData = await Ticket.findOne({ id: id });
@@ -36,7 +36,19 @@ const getTicketId = async (req, res) => {
   }
 };
 
-const postTicket = async (req, res) => {
+exports.getTicketUserEmail = async (req, res) => {
+  const ticketData = await Ticket.find({
+    ref_user: await User.findOne({ email: req.user.email }._id),
+  });
+  if (ticketData.length === 0) {
+    res.status(404).json(new RespondFormat(true, 'No ticket data'));
+  }
+  res
+    .status(200)
+    .json(new RespondFormat(true, 'Ticket data found', ticketData));
+};
+
+exports.postTicket = async (req, res) => {
   try {
     const refEvent = await Event.findOne({ id: req.body.ref_event_id });
     const refUser = await User.findOne({ email: req.body.ref_user_email });
@@ -115,7 +127,7 @@ const postTicket = async (req, res) => {
   }
 };
 
-const putTicket = async (req, res) => {
+exports.putTicket = async (req, res) => {
   await Ticket.findOneAndUpdate(
     { id: req.body.id },
     { amount: req.body.amount, status: req.body.status },
@@ -144,7 +156,7 @@ const putTicket = async (req, res) => {
     );
 };
 
-const deleteTicket = async (req, res) => {
+exports.deleteTicket = async (req, res) => {
   const deleted = await Ticket.deleteMany({});
   Counter.findOneAndUpdate({ name: 'ticket' }, { seq: 0 });
   if (deleted.deletedCount === 0) {
@@ -155,7 +167,7 @@ const deleteTicket = async (req, res) => {
     .json(new RespondFormat(true, `${deleted.deletedCount} data is deleted`));
 };
 
-const deleteTicketId = async (req, res) => {
+exports.deleteTicketId = async (req, res) => {
   const deleted = await Ticket.deleteOne({ id: req.params.id });
   if (deleted.deletedCount === 0) {
     res
@@ -165,13 +177,4 @@ const deleteTicketId = async (req, res) => {
   res
     .status(200)
     .json(new RespondFormat(true, `${deleted.deletedCount} data is deleted`));
-};
-
-module.exports = {
-  getTicket,
-  getTicketId,
-  postTicket,
-  putTicket,
-  deleteTicket,
-  deleteTicketId,
 };

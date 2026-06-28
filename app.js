@@ -5,6 +5,7 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'view'));
+
 app.use(express.static(path.join(__dirname, 'view')));
 
 const initServer = () => {
@@ -46,10 +47,10 @@ app.use('/api', ticketRoute);
 app.use('/api', stockRoute);
 app.use('/api', adminRoute);
 
-const userUserRoute = require('./route/api_user/user.js');
-const userTicketRoute = require('./route/api_user/ticket.js');
-const userStockRoute = require('./route/api_user/stock.js');
-const userPaymentRoute = require('./route/api_user/payment.js');
+const userUserRoute = require('./route/apiUser/user.js');
+const userTicketRoute = require('./route/apiUser/ticket.js');
+const userStockRoute = require('./route/apiUser/stock.js');
+const userPaymentRoute = require('./route/apiUser/payment.js');
 
 app.use('/apiUser', userUserRoute);
 app.use('/apiUser', userTicketRoute);

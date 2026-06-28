@@ -7,9 +7,9 @@ const router = require('express').Router();
 router.post('/user/login', authMiddleware.userToken);
 
 router.get(
-  '/user/:email',
+  '/user',
   authMiddleware.verifyUserToken,
-  userController.getUserEmail,
+  userController.getCurrentUserEmail,
 );
 
 router.put(

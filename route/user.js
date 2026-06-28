@@ -15,8 +15,8 @@ router.get('/auth/register', (req, res) =>
 
 router.post('/admin', adminController.login);
 router.get('/user', userController.getUser);
-router.get('/user/email/:email', userController.getUserEmail);
-router.get('/user/name/:name', userController.getUserEmail);
+// router.get('/user/email/:email', userController.getUserEmail);
+// router.get('/user/name/:name', userController.getUserEmail);
 router.post('/user/login', authMiddleware.userToken);
 router.post('/user', userController.postUser);
 router.put('/user', userController.putUser);

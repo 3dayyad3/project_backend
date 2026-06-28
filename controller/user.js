@@ -1,7 +1,31 @@
 const User = require('../model/user.js');
 const RespondFormat = require('../respondFormat.js');
+const url = require('url');
 
 exports.getUser = async (req, res) => {
+  const query = url.parse(req.url, true).query;
+  if (query.email !== null) {
+    const userData = await User.findOne({ email: query.email });
+    if (userData === null) {
+      res
+        .status(404)
+        .json(
+          new RespondFormat(
+            false,
+            'User data with email ' + query.email + ' not avaible',
+          ),
+        );
+    }
+    res
+      .status(200)
+      .json(
+        new RespondFormat(
+          true,
+          'User data with email ' + query.email + ' avaible',
+          [userData],
+        ),
+      );
+  }
   const userData = await User.find({});
   if (userData.length === 0) {
     res.status(404).json(new RespondFormat(false, 'Users data not found'));
@@ -9,11 +33,8 @@ exports.getUser = async (req, res) => {
   res.status(200).json(new RespondFormat(true, 'User Data found', userData));
 };
 
-exports.getUserEmail = async (req, res) => {
-  if (req.params.email !== req.user.email) {
-    res.status(403).json(new RespondFormat(false, 'Forbiden'));
-  }
-  const userData = await User.findOne({ email: req.params.email });
+exports.getCurrentUserEmail = async (req, res) => {
+  const userData = await User.findOne({ email: req.user.email });
   if (userData === null) {
     res
       .status(404)
@@ -34,6 +55,8 @@ exports.getUserEmail = async (req, res) => {
       ),
     );
 };
+
+exports.get;
 
 exports.postUser = async (req, res) => {
   try {

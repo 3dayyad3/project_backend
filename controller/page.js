@@ -16,7 +16,7 @@ const adminPage = (req, res) => {
 };
 
 const userPage = (req, res) => {
-  res.render('dashboard/user', { test: req.user });
+  res.render('dashboard/user', { user: req.user });
 };
 
 module.exports = {

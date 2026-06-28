@@ -82,8 +82,8 @@
 
         <h2>👤 Akun</h2>
 
-        <p><strong>Username :</strong> <%= test.id %></p>
-        <p><strong>Email :</strong> <%= test.email %></p>
+        <p><strong>Username :</strong> <%= user.id %></p>
+        <p><strong>Email :</strong> <%= user.email %></p>
 
         <button onclick="location.href='/change-username'">
           Ganti Username
@@ -95,9 +95,11 @@
 
         <br><br>
         <button
-          onclick="location.href='/logout'"
-          style="background:#dc2626;">
-          Logout
+            onclick="location.href='/api/auth/login'"
+            style="background:#dc2626;">
+            Logout
+        </button>
+        </button>
         </button>
 
 <hr>

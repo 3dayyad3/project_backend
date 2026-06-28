@@ -128,6 +128,35 @@ const deleteUserEmail = async (req, res) => {
     .json(new RespondFormat(true, `${deleted.deletedCount} data deleted`));
 };
 
+//Ganti Password
+const changePassword = async (req, res) => {
+  try {
+    const { email, oldPassword, newPassword, confirmPassword } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.send('Email tidak ditemukan.');
+    }
+
+    if (user.password !== oldPassword) {
+      return res.send('Password lama salah.');
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.send('Konfirmasi password tidak cocok.');
+    }
+
+    user.password = newPassword;
+
+    await user.save();
+
+    res.send('Password berhasil diubah.');
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
 module.exports = {
   getUser,
   getUserEmail,
@@ -137,4 +166,5 @@ module.exports = {
   deleteUserName,
   deleteUserWithEmptyName,
   deleteUserEmail,
+  changePassword,
 };

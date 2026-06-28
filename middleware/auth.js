@@ -21,7 +21,7 @@ exports.adminToken = async (req, res) => {
 };
 
 exports.verifyToken = (req, res, next) => {
-  if (req.params.role === 'user') {
+  if (req.query.role === 'user') {
     if (adminToken === '') {
       return res
         .status(403)
@@ -36,7 +36,7 @@ exports.verifyToken = (req, res, next) => {
       req.admin = decoded;
       next();
     });
-  } else if (req.params.role === 'admin') {
+  } else if (req.query.role === 'admin') {
     if (userToken === '') {
       return res
         .status(403)

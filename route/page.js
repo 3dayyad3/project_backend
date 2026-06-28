@@ -5,7 +5,7 @@ const router = require('express').Router();
 router.get('/', pageControler.rootPage);
 router.get('/login', pageControler.loginPage);
 router.get('/register', pageControler.registerPage);
-router.get('/admin', pageControler.adminPage);
+router.get('/admin/dashboard', pageControler.adminPage);
 router.get(
   '/user/dashboard',
   authMiddleware.verifyUserToken,

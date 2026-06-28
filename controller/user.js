@@ -181,43 +181,43 @@ exports.deleteUserEmail = async (req, res) => {
     .json(new RespondFormat(true, `${deleted.deletedCount} data deleted`));
 };
 
-//Ganti Password
-const changePassword = async (req, res) => {
+exports.changePassword = async (req, res) => {
   try {
     const { email, oldPassword, newPassword, confirmPassword } = req.body;
 
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.send('Email tidak ditemukan.');
+    if (req.user.email !== email) {
+      res.status(403).json(new RespondFormat(false, 'Forbidden'));
     }
 
     if (user.password !== oldPassword) {
-      return res.send('Password lama salah.');
+      return res
+        .status(404)
+        .json(new RespondFormat(false, 'Password lama salah.'));
     }
 
     if (newPassword !== confirmPassword) {
-      return res.send('Konfirmasi password tidak cocok.');
+      return res
+        .status(404)
+        .json(new RespondFormat(false, 'Konfirmasi password tidak cocok.'));
     }
 
-    user.password = newPassword;
+    const updatedUser = await User.findOneAndUpdate(
+      { email: email },
+      { password: req.body.password },
+    );
 
-    await user.save();
+    if (!updatedUser) {
+      res.status(404).json(new RespondFormat(false, 'Email tidak ditemukan.'));
+    }
 
-    res.send('Password berhasil diubah.');
+    await updatedUser.save();
+
+    res
+      .status(200)
+      .json(
+        new RespondFormat(true, 'Password berhasil diubah.', [updatedUser]),
+      );
   } catch (err) {
-    res.send(err.message);
+    res.status(404).json(new RespondFormat(false, err.message));
   }
-};
-
-module.exports = {
-  getUser,
-  getUserEmail,
-  postUser,
-  putUser,
-  deleteUser,
-  deleteUserName,
-  deleteUserWithEmptyName,
-  deleteUserEmail,
-  changePassword,
 };

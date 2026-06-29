@@ -7,7 +7,17 @@ const router = require('express').Router();
 router.get(
   '/ticket',
   authMiddleware.verifyUserToken,
-  ticketController.getTicketUserEmail,
+  ticketController.getCurrentUserTicket,
 );
+
+// router.get(
+  // '/ticket',authMiddleware.verifyUserToken,
+  // ticketController.putCurrentUserTicket
+// )
+
+router.post(
+  '/ticket', authMiddleware.verifyUserToken,
+  ticketController.postCurrentUserTicket
+)
 
 module.exports = router;

@@ -48,6 +48,18 @@ exports.getTicketUserEmail = async (req, res) => {
     .json(new RespondFormat(true, 'Ticket data found', ticketData));
 };
 
+exports.getCurrentUserTicket = async (req, res) => {
+    const ticketData = await Ticket.find({
+    ref_user: await User.findOne({ email: req.user.email }._id),
+  });
+  if (ticketData.length === 0) {
+    res.status(404).json(new RespondFormat(false, 'No ticket data'));
+  }
+  res
+    .status(200)
+    .json(new RespondFormat(true, 'Ticket data found', ticketData));
+}
+
 exports.postTicket = async (req, res) => {
   try {
     const refEvent = await Event.findOne({ id: req.body.ref_event_id });
@@ -154,6 +166,85 @@ exports.putTicket = async (req, res) => {
         await Ticket.findOne({ id: req.body.id }),
       ]),
     );
+};
+
+exports.postCurrentUserTicket = async (req, res) =>   {
+try {
+    const refEvent = await Event.findOne({ id: req.body.ref_event_id });
+    const refUser = await User.findOne({ email: req.user.email });
+
+    if (refEvent === null || refUser === null) {
+      const temp = { ref_user_email: refUser, ref_event_id: refEvent };
+      let result = '';
+      Object.entries(temp).forEach(([key, value]) => {
+        if (value === null) {
+          result += `${key} not Found. `;
+        }
+      });
+      res.status(404).json(new RespondFormat(false, result));
+    }
+
+    const stock = await Stock.findOne({ ref_event: refEvent._id });
+    if (stock === null) {
+      res.status(404).json(new RespondFormat(false, 'Event doesnt have stock'));
+    }
+
+    if (req.body.status === 'vip') {
+      if (stock.amount.vip < req.body.amount) {
+        res
+          .status(404)
+          .json(
+            new RespondFormat(false, `Event doesnt have enought vip ticket`),
+          );
+      }
+    }
+
+    if (req.body.status === 'regular') {
+      if (stock.amount.regular < req.body.amount) {
+        res
+          .status(404)
+          .json(
+            new RespondFormat(
+              false,
+              `Event doesnt have enought regular ticket`,
+            ),
+          );
+      }
+    }
+
+    let ticketCounter = await Counter.findOne({ name: 'ticket' });
+    if (ticketCounter === null) {
+      const newTicketCounter = new Counter({ name: 'ticket' });
+      ticketCounter = await newTicketCounter.save();
+    }
+
+    ticketCounter = await Counter.findOneAndUpdate(
+      { name: 'ticket' },
+      { seq: ticketCounter.seq + 1 },
+    );
+    let newTicket = new Ticket({
+      id: ticketCounter.seq,
+      ref_event: refEvent._id,
+      ref_user: refUser._id,
+      amount: req.body.amount,
+      status: req.body.status,
+    });
+
+    if (newTicket.status === 'vip') {
+      newTicket.total = newTicket.amount * stock.price.vip;
+    }
+
+    if (newTicket.status === 'regular') {
+      newTicket.total = newTicket.amount * stock.price.regular;
+    }
+
+    const savedTicket = await newTicket.save();
+    res
+      .status(201)
+      .json(new RespondFormat(true, `Ticket data is saved`, [savedTicket]));
+  } catch (error) {
+    res.status(400).json(new RespondFormat(false, error.message));
+  }
 };
 
 exports.deleteTicket = async (req, res) => {

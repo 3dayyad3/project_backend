@@ -56,8 +56,6 @@ exports.getCurrentUser = async (req, res) => {
     );
 };
 
-exports.get;
-
 exports.postUser = async (req, res) => {
   try {
     const newUser = new User({
@@ -98,14 +96,11 @@ exports.putUser = async (req, res) => {
   }
 };
 
-exports.putCurrentUser = async (req, res) => {
+exports.putCurrentUserName = async (req, res) => {
   try {
-    if (req.user.email !== req.body.email) {
-      res.json(new RespondFormat(false, 'Hanya current user yang bisa'));
-    }
     const updatedUser = await User.findOneAndUpdate(
       { email: req.body.email },
-      { name: req.body.name, password: req.body.password },
+      { name: req.body.name },
     );
     if (updatedUser === null) {
       res
@@ -124,6 +119,30 @@ exports.putCurrentUser = async (req, res) => {
     res.status(400).json(new RespondFormat(false, error.message));
   }
 };
+
+exports.putCurrentUserPassword = async (req, res) => {
+    try {
+    const updatedUser = await User.findOneAndUpdate(
+      { email: req.body.email },
+      { password: req.body.password },
+    );
+    if (updatedUser === null) {
+      res
+        .status(404)
+        .json(
+          new RespondFormat(
+            false,
+            `user with email ${req.body.email} not found`,
+          ),
+        );
+    }
+    res
+      .status(201)
+      .json(new RespondFormat(true, 'Data Updated', [updatedUser]));
+  } catch (error) {
+    res.status(400).json(new RespondFormat(false, error.message));
+  }
+}
 
 exports.deleteUser = async (req, res) => {
   const deleted = await User.deleteMany({});

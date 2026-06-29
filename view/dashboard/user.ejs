@@ -1,117 +1,286 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Dashboard User</title>
 
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        background: #f4f4f4;
-      }
+        body{
+            font-family:Arial, sans-serif;
+            margin:0;
+            background:#f4f4f4;
+        }
 
-      .navbar {
-        background: #1e293b;
-        color: white;
-        padding: 15px;
-      }
+        .navbar{
+            background:#252058;
+            color:rgba(255, 255, 255, 0.932);
+            padding:15px;
+        }
 
-      .container {
-        display: flex;
-      }
+        .container{
+            display:flex;
+        }
 
-      .content {
-        flex: 3;
-        padding: 20px;
-      }
+        .content{
+            flex:3;
+            padding:20px;
+        }
 
-      .cart {
-        flex: 1;
-        background: white;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
+        .cart{
+            flex:1;
+            background:white;
+            padding:20px;
+            box-shadow:0 0 10px rgba(0,0,0,.1);
+        }
 
-      .card {
-        background: white;
-        padding: 20px;
-        margin-bottom: 20px;
-        border-radius: 10px;
-      }
+        .card{
+            background:white;
+            padding:20px;
+            margin-bottom:20px;
+            border-radius:10px;
+        }
 
-      button {
-        background: #2563eb;
-        color: white;
-        border: none;
-        padding: 10px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
+        button{
+            background:#151d30;
+            color:white;
+            border:none;
+            padding:10px;
+            border-radius:5px;
+            cursor:pointer;
+            margin:3px;
+        }
+
+        button:hover{
+            background:#4b6cc5;
+        }
+
+        hr{
+            margin:15px 0;
+        }
+
+        .ticket-item{
+            padding:10px;
+            background:#f8fafc;
+            border-radius:8px;
+            margin-bottom:10px;
+        }
+
     </style>
-  </head>
-  <body>
-    <div class="navbar">
-      <h2>Dashboard User</h2>
-    </div>
 
-    <div class="container">
-      <div class="content">
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>Dashboard User</h2>
+</div>
+
+<div class="container">
+
+    <div class="content">
+
         <h2>Daftar Event</h2>
 
         <div class="card">
-          <h3>Konser Coldplay</h3>
-          <p>Regular : Rp500.000</p>
-          <p>VIP : Rp1.500.000</p>
 
-          <button>Tambah Regular</button>
-          <button>Tambah VIP</button>
+            <h3>Konser Coldplay</h3>
+
+            <p>Regular : Rp500.000</p>
+            <p>VIP : Rp1.500.000</p>
+
+            <button onclick="tambahTiket('Konser Coldplay','Regular',500000)">
+                Tambah Regular
+            </button>
+
+            <button onclick="tambahTiket('Konser Coldplay','VIP',1500000)">
+                Tambah VIP
+            </button>
+
         </div>
 
         <div class="card">
-          <h3>Festival Musik</h3>
-          <p>Regular : Rp300.000</p>
-          <p>VIP : Rp900.000</p>
 
-          <button>Tambah Regular</button>
-          <button>Tambah VIP</button>
+            <h3>Festival Musik</h3>
+
+            <p>Regular : Rp300.000</p>
+            <p>VIP : Rp900.000</p>
+
+            <button onclick="tambahTiket('Festival Musik','Regular',300000)">
+                Tambah Regular
+            </button>
+
+            <button onclick="tambahTiket('Festival Musik','VIP',900000)">
+                Tambah VIP
+            </button>
+
         </div>
-      </div>
 
-      <div class="cart">
-        <h2>🛒 Keranjang</h2>
+    </div>
+
+    <div class="cart">
 
         <h2>👤 Akun</h2>
+        <p><strong> Hai! Selamat Datang </strong> <%= user.name %></p>
+        <p><strong> Email, </strong> <%= user.email %></p>
 
-        <p><strong>Username :</strong> <%= user.id %></p>
-        <p><strong>Email :</strong> <%= user.email %></p>
+        
 
-        <button onclick="location.href='/change-username'">
-          Ganti Username
-        </button>
-        <br><br>
         <button onclick="location.href='/change-password'">
-          Ganti Password
+            Ganti Password
         </button>
 
-        <br><br>
         <button
             onclick="location.href='/api/auth/login'"
-            style="background:#dc2626;">
+            style="background:#8d592f;">
             Logout
         </button>
-        </button>
-        </button>
 
-<hr>
-        <p>Belum ada tiket.</p>
 
-        <hr />
+        <h2>🛒 Keranjang</h2>
+
+        <hr>
+
+        <div id="keranjang">
+            <p>Belum ada tiket.</p>
+        </div>
+
+        <hr>
 
         <h3>Total</h3>
-        <p>Rp0</p>
 
-        <button>Checkout</button>
-      </div>
+        <p id="totalHarga">Rp0</p>
+
+        <button>
+            Checkout
+        </button>
+
     </div>
-  </body>
+
+</div>
+
+<script>
+
+let cart = [];
+
+function tambahTiket(event, jenis, harga){
+
+    let data = cart.find(item =>
+        item.event === event &&
+        item.jenis === jenis
+    );
+
+    if(data){
+
+        data.jumlah++;
+
+    }else{
+
+        cart.push({
+            event: event,
+            jenis: jenis,
+            harga: harga,
+            jumlah: 1
+        });
+
+    }
+
+    renderCart();
+
+}
+
+// Tombol +
+function tambah(index){
+
+    cart[index].jumlah++;
+
+    renderCart();
+
+}
+
+// Tombol -
+function kurang(index){
+
+    cart[index].jumlah--;
+
+    if(cart[index].jumlah <= 0){
+
+        cart.splice(index,1);
+
+    }
+
+    renderCart();
+
+}
+
+// Tombol Hapus
+function hapus(index){
+
+    cart.splice(index,1);
+
+    renderCart();
+
+}
+
+function renderCart(){
+
+    let keranjang = document.getElementById("keranjang");
+
+    let total = 0;
+
+    keranjang.innerHTML = "";
+
+    if(cart.length === 0){
+
+        keranjang.innerHTML = "<p>Belum ada tiket.</p>";
+
+    }else{
+
+        cart.forEach((item,index)=>{
+
+            total += item.harga * item.jumlah;
+
+            keranjang.innerHTML += `
+                <div class="ticket-item">
+
+                    <strong>${item.jumlah}x Tiket ${item.jenis}</strong><br>
+
+                    ${item.event}<br>
+
+                    Rp ${item.harga.toLocaleString("id-ID")}
+
+                    <br><br>
+
+                    <button onclick="kurang(${index})">
+                        -
+                    </button>
+
+                    <button onclick="tambah(${index})">
+                        +
+                    </button>
+
+                    <button
+                        onclick="hapus(${index})"
+                        style="background:#dc2626;">
+
+                        Hapus
+
+                    </button>
+
+                </div>
+
+                <hr>
+
+            `;
+
+        });
+
+    }
+
+    document.getElementById("totalHarga").innerHTML =
+        "Rp " + total.toLocaleString("id-ID");
+
+}
+
+</script>
+
+</body>
 </html>

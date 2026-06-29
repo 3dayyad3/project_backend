@@ -36,7 +36,7 @@ exports.getTicketId = async (req, res) => {
   }
 };
 
-exports.getTicketUserEmail = async (req, res) => {
+exports.getCurrentUserTicket = async (req, res) => {
   const ticketData = await Ticket.find({
     ref_user: await User.findOne({ email: req.user.email }._id),
   });
@@ -168,7 +168,7 @@ exports.putTicket = async (req, res) => {
     );
 };
 
-exports.postCurrentUserTicket = async (req, res) =>   {
+exports.postCurrentUserTicket = async (req, res) => {
 try {
     const refEvent = await Event.findOne({ id: req.body.ref_event_id });
     const refUser = await User.findOne({ email: req.user.email });

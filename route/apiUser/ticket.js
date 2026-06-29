@@ -5,19 +5,23 @@ const authMiddleware = require('../../middleware/auth.js');
 const router = require('express').Router();
 
 router.get(
-  '/ticket',
+  '/currentUserTicket',
   authMiddleware.verifyUserToken,
   ticketController.getCurrentUserTicket,
 );
 
-// router.get(
-  // '/ticket',authMiddleware.verifyUserToken,
-  // ticketController.putCurrentUserTicket
-// )
+router.get(
+  '/ticket',authMiddleware.verifyUserToken,
+  ticketController.getCurrentUserTicket
+)
 
 router.post(
   '/ticket', authMiddleware.verifyUserToken,
   ticketController.postCurrentUserTicket
 )
+
+// router.put('/ticket', authMiddleware.verifyAdminToken,
+  // ticketController.putCurrentUserTicket
+// )
 
 module.exports = router;

@@ -5,16 +5,19 @@ const router = require('express').Router();
 
 router.get('/ticket', ticketController.getTicket);
 router.get('/ticket/:id', ticketController.getTicketId);
+
 router.post(
   '/ticket',
   authMiddleware.verifyAdminToken,
   ticketController.postTicket,
 );
+
 router.put(
   '/ticket',
   authMiddleware.verifyAdminToken,
   ticketController.putTicket,
 );
+
 router.delete(
   '/ticket',
   authMiddleware.verifyAdminToken,

@@ -13,13 +13,16 @@ router.get('/auth/register', (req, res) =>
   res.render('auth/register', { error: null, old: {} }),
 );
 
-router.post('/admin', adminController.login);
-router.get('/user', userController.getUser);
+// router.post('/admin', adminController.login);
 // router.get('/user/email/:email', userController.getUserEmail);
 // router.get('/user/name/:name', userController.getUserEmail);
+router.get('/user', userController.getUser);
+
 router.post('/user/login', authMiddleware.userToken);
 router.post('/user', userController.postUser);
+
 router.put('/user', authMiddleware.verifyUserToken, userController.putUser);
+
 router.delete(
   '/user',
   authMiddleware.verifyAdminToken,

@@ -33,7 +33,7 @@ exports.getUser = async (req, res) => {
   res.status(200).json(new RespondFormat(true, 'User Data found', userData));
 };
 
-exports.getCurrentUserEmail = async (req, res) => {
+exports.getCurrentUser = async (req, res) => {
   const userData = await User.findOne({ email: req.user.email });
   if (userData === null) {
     res
@@ -98,7 +98,7 @@ exports.putUser = async (req, res) => {
   }
 };
 
-exports.putUserEmail = async (req, res) => {
+exports.putCurrentUser = async (req, res) => {
   try {
     if (req.user.email !== req.body.email) {
       res.json(new RespondFormat(false, 'Hanya current user yang bisa'));

@@ -7,15 +7,15 @@ const router = require('express').Router();
 router.post('/user/login', authMiddleware.userToken);
 
 router.get(
-  '/user',
+  '/currentUser',
   authMiddleware.verifyUserToken,
-  userController.getCurrentUserEmail,
+  userController.getCurrentUser,
 );
 
 router.put(
-  '/user',
+  '/currentUser',
   authMiddleware.verifyUserToken,
-  userController.putUserEmail,
+  userController.putCurrentUser,
 );
 
 module.exports = router;

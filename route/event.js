@@ -12,9 +12,7 @@ router.post(
   eventController.postEvent,
 );
 
-router.put('/event',
-  authMiddleware.verifyAdminToken,
-  eventController.putEvent);
+router.put('/event', authMiddleware.verifyAdminToken, eventController.putEvent);
 
 router.delete('/event/id/:id', authMiddleware.adminToken);
 router.delete(

@@ -36,7 +36,9 @@ const getCurrentUserPayment = async (req, res) => {
     ref_user: await User.find({ email: req.user.email }),
   });
   if (ticket === null) {
-    res.status(404).json(new RespondFormat(false, 'Current User have no ticket'));
+    res
+      .status(404)
+      .json(new RespondFormat(false, 'Current User have no ticket'));
   }
   let currentUserPaymentData = [];
   ticket.forEach(async (val) => {
@@ -44,7 +46,9 @@ const getCurrentUserPayment = async (req, res) => {
     currentUserPaymentData.push(data);
   });
   if (currentUserPaymentData.length === 0) {
-    res.status(404).json(new RespondFormat(false, 'Current User have no Payment Data'))
+    res
+      .status(404)
+      .json(new RespondFormat(false, 'Current User have no Payment Data'));
   }
   res
     .status(200)

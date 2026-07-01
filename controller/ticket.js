@@ -49,7 +49,7 @@ exports.getCurrentUserTicket = async (req, res) => {
 };
 
 exports.getCurrentUserTicket = async (req, res) => {
-    const ticketData = await Ticket.find({
+  const ticketData = await Ticket.find({
     ref_user: await User.findOne({ email: req.user.email }._id),
   });
   if (ticketData.length === 0) {
@@ -58,7 +58,7 @@ exports.getCurrentUserTicket = async (req, res) => {
   res
     .status(200)
     .json(new RespondFormat(true, 'Ticket data found', ticketData));
-}
+};
 
 exports.postTicket = async (req, res) => {
   try {
@@ -169,7 +169,7 @@ exports.putTicket = async (req, res) => {
 };
 
 exports.postCurrentUserTicket = async (req, res) => {
-try {
+  try {
     const refEvent = await Event.findOne({ id: req.body.ref_event_id });
     const refUser = await User.findOne({ email: req.user.email });
 

@@ -62,6 +62,10 @@ const postStock = async (req, res) => {
 
 const putStock = async (req, res) => {
   try {
+    if (Object.keys(req.body).length === 0) {
+      res.status(200).json(new RespondFormat(true, 'Nothing to Update'));
+    }
+
     const eventRef = await Event.findOne({ id: req.body.ref_event_id });
     if (eventRef === null) {
       res
@@ -74,28 +78,84 @@ const putStock = async (req, res) => {
         );
     }
 
-    const newStock = await Stock.findOneAndUpdate(
+    const currentStock = await Stock.findOne({ ref_event: eventRef });
+
+    if (currentStock === null || currentStock === undefined) {
+      res
+        .status(404)
+        .json(
+          new RespondFormat(
+            false,
+            'no stock with event id ' + new String(eventRef.id),
+          ),
+        );
+    }
+
+    let updatePart = {};
+
+    if (req.body.amount !== null && req.body.amount !== undefined) {
+      let amountPart = {};
+      if (req.body.amount.vip !== null && req.body.amount.vip !== undefined) {
+        Object.assign(amountPart, { vip: req.body.amount.vip });
+      } else {
+        Object.assign(amountPart, { vip: currentStock.amount.vip });
+      }
+
+      if (
+        req.body.amount.regular !== null &&
+        req.body.amount.regular !== undefined
+      ) {
+        Object.assign(amountPart, { regular: req.body.amount.regular });
+      } else {
+        Object.assign(amountPart, { regular: req.body.amount.regular });
+      }
+
+      if (Object.keys(amountPart).length !== 0) {
+        Object.assign(updatePart, { amount: amountPart });
+      }
+    }
+
+    if (req.body.price !== null && req.body.price !== undefined) {
+      let pricePart = {};
+      if (
+        req.body.price.regular !== null &&
+        req.body.price.regular !== undefined
+      ) {
+        Object.assign(pricePart, { regular: req.body.price.regular });
+      } else {
+        Object.assign(pricePart, { regular: currentStock.price.regular });
+      }
+
+      if (req.body.price.vip !== null && req.body.price.vip !== undefined) {
+        Object.assign(pricePart, { vip: req.body.price.vip });
+      } else {
+        Object.assign(pricePart, { vip: currentStock.price.vip });
+      }
+
+      if (Object.keys(pricePart).length !== 0) {
+        Object.assign(updatePart, { price: pricePart });
+      }
+      console.log(pricePart);
+    }
+
+    const updatedStock = await Stock.findOneAndUpdate(
       { ref_event: eventRef._id },
-      {
-        amount: {
-          vip: req.body.amount.vip,
-          regular: req.body.amount.regular,
-        },
-        price: {
-          vip: req.body.price.vip,
-          regular: req.body.price.regular,
-        },
-      },
+      updatePart,
     );
+
+    if (updatedStock === null) {
+      res.status(400).json(new RespondFormat(false, 'Failed to Update'));
+    }
+
     res
-      .status(200)
+      .status(201)
       .json(
         new RespondFormat(true, 'Data Saved', [
           await Stock.findOne({ ref_event: eventRef._id }),
         ]),
       );
   } catch (error) {
-    res.status(404).json(new RespondFormat(false, error.message));
+    res.status(400).json(new RespondFormat(false, error.message));
   }
 };
 

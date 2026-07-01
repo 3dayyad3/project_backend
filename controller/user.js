@@ -98,7 +98,7 @@ exports.putCurrentUserName = async (req, res) => {
 };
 
 exports.putCurrentUserPassword = async (req, res) => {
-    try {
+  try {
     const updatedUser = await User.findOneAndUpdate(
       { email: req.body.email },
       { password: req.body.password },
@@ -119,7 +119,7 @@ exports.putCurrentUserPassword = async (req, res) => {
   } catch (error) {
     res.status(400).json(new RespondFormat(false, error.message));
   }
-}
+};
 
 exports.deleteUser = async (req, res) => {
   const deleted = await User.deleteMany({});

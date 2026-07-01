@@ -3,14 +3,8 @@ const authMiddleware = require('../middleware/auth.js');
 
 const router = require('express').Router();
 
-router.get(
-  '/payment',
-  paymentController.getPayment,
-);
-router.get(
-  '/payment/:id',
-  paymentController.getPaymentId,
-);
+router.get('/payment', paymentController.getPayment);
+router.get('/payment/:id', paymentController.getPaymentId);
 
 router.post(
   '/payment',

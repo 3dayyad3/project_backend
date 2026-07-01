@@ -3,32 +3,9 @@ const RespondFormat = require('../respondFormat.js');
 const url = require('url');
 
 exports.getUser = async (req, res) => {
-  const query = url.parse(req.url, true).query;
-  if (query.email !== null) {
-    const userData = await User.findOne({ email: query.email });
-    if (userData === null) {
-      res
-        .status(404)
-        .json(
-          new RespondFormat(
-            false,
-            'User data with email ' + query.email + ' not avaible',
-          ),
-        );
-    }
-    res
-      .status(200)
-      .json(
-        new RespondFormat(
-          true,
-          'User data with email ' + query.email + ' avaible',
-          [userData],
-        ),
-      );
-  }
   const userData = await User.find({});
   if (userData.length === 0) {
-    res.status(404).json(new RespondFormat(false, 'Users data not found'));
+    res.status(404).json(new RespondFormat(false, 'Users data not avaible'));
   }
   res.status(200).json(new RespondFormat(true, 'User Data found', userData));
 };

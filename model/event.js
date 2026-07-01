@@ -6,6 +6,10 @@ const eventSchema = new mongoose.Schema({
     require: true,
     unique: true,
   },
+  name: {
+    type: String,
+    default: '',
+  },
   description: {
     type: String,
     default: '',

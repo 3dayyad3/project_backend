@@ -11,17 +11,21 @@ router.get(
 );
 
 router.get(
-  '/ticket',authMiddleware.verifyUserToken,
-  ticketController.getCurrentUserTicket
-)
+  '/ticket',
+  authMiddleware.verifyUserToken,
+  ticketController.getCurrentUserTicket,
+);
 
 router.post(
-  '/ticket', authMiddleware.verifyUserToken,
-  ticketController.postCurrentUserTicket
-)
+  '/ticket',
+  authMiddleware.verifyUserToken,
+  ticketController.postCurrentUserTicket,
+);
 
-// router.put('/ticket', authMiddleware.verifyAdminToken,
-  // ticketController.putCurrentUserTicket
-// )
+router.put(
+  '/ticket',
+  authMiddleware.verifyAdminToken,
+  ticketController.putCurrentUserTicket,
+);
 
 module.exports = router;

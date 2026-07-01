@@ -168,6 +168,105 @@ exports.putTicket = async (req, res) => {
     );
 };
 
+exports.putCurrentUserTicket = async (req, res) => {
+  const currentUser = await User.findOne({ user: req.user.email });
+
+  if (currentUser === null) {
+    res
+      .status(400)
+      .json(new RespondFormat(false, 'Use verify user token middleware'));
+  }
+
+  const currentUserTicket = await Ticket.find({ ref_user: currentUser._id });
+
+  if (currentUserTicket.length === 0) {
+    res
+      .status(404)
+      .json(new RespondFormat(false, 'Current User have no Ticket'));
+  }
+
+  if (Object.keys(req.body).length === 0) {
+    res
+      .status(200)
+      .json(new RespondFormat(true, 'nothing to update', currentUserTicket));
+  }
+
+  let updateObj = {};
+  let currentUserOneTicket = {};
+  currentUserTicket.some((val) => {
+    if (val.id === req.body.id) {
+      Object.assign(currentUserOneTicket, val);
+    }
+  });
+  if (Object.keys(currentUserOneTicket).length !== 0) {
+    updateId = req.body.id;
+    if (
+      req.body.amount !== null &&
+      req.body.amount !== undefined &&
+      typeof req.body.amount === 'number'
+    ) {
+      Object.assign(update, { amount: req.body.amount });
+    } else {
+      Object.assign(update, { amount: currentUserOneTicket.amount });
+    }
+
+    if (req.body.status !== null && req.body.status !== undefined) {
+      Object.assign(update, { status: req.body.status });
+    } else {
+      Object.assign(update, { status: currentUserOneTicket.status });
+    }
+  } else {
+    res
+      .status(404)
+      .json(
+        new RespondFormat(
+          false,
+          'Current User have no ticket with id ' + new String(req.body.id),
+        ),
+      );
+  }
+
+  if (Object.keys(updateObj).length === 0) {
+    res
+      .status(200)
+      .json(
+        new RespondFormat(true, 'Nothing to update', [currentUserOneTicket]),
+      );
+  }
+
+  const updatedTicket = await Ticket.findOneAndUpdate(
+    { id: req.body.id },
+    updateObj,
+  );
+
+  if (updatedTicket === null) {
+    res.status(500).json(new RespondFormat(false, 'Dunno Why'));
+  }
+
+  const newTicket = await Ticket.findOne({ id: req.body.id });
+  if (newTicket === null) {
+    res
+      .status(404)
+      .json(
+        new RespondFormat(false, `Ticket dengan id ${req.body.id} not found`),
+      );
+  }
+
+  if (ticket.status === 'vip') {
+    ticket.total = ticket.amount * stock.price.vip;
+  } else {
+    ticket.total = ticket.amount * stock.price.regular;
+  }
+  await Ticket.findOneAndUpdate({ id: req.body.id }, { total: ticket.total });
+  res
+    .status(201)
+    .json(
+      new RespondFormat(true, `Ticket data is updated`, [
+        await Ticket.findOne({ id: req.body.id }),
+      ]),
+    );
+};
+
 exports.postCurrentUserTicket = async (req, res) => {
   try {
     const refEvent = await Event.findOne({ id: req.body.ref_event_id });

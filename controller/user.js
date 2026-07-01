@@ -73,52 +73,55 @@ exports.putUser = async (req, res) => {
   }
 };
 
-exports.putCurrentUserName = async (req, res) => {
-  try {
-    const updatedUser = await User.findOneAndUpdate(
-      { email: req.body.email },
-      { name: req.body.name },
-    );
-    if (updatedUser === null) {
-      res
-        .status(404)
-        .json(
-          new RespondFormat(
-            false,
-            `user with email ${req.body.email} not found`,
-          ),
-        );
-    }
-    res
-      .status(201)
-      .json(new RespondFormat(true, 'Data Updated', [updatedUser]));
-  } catch (error) {
-    res.status(400).json(new RespondFormat(false, error.message));
+exports.putCurrentUser = async (req, res) => {
+  const currentUser = await User.find({ email: req.user.email });
+  if (currentUser === null) {
+    res.status(404).json(new RespondFormat(false, 'User not Login yet maybe?'));
   }
-};
 
-exports.putCurrentUserPassword = async (req, res) => {
-  try {
-    const updatedUser = await User.findOneAndUpdate(
-      { email: req.body.email },
-      { password: req.body.password },
-    );
-    if (updatedUser === null) {
-      res
-        .status(404)
-        .json(
-          new RespondFormat(
-            false,
-            `user with email ${req.body.email} not found`,
-          ),
-        );
-    }
+  if (Object.keys(req.body).length === 0) {
     res
-      .status(201)
-      .json(new RespondFormat(true, 'Data Updated', [updatedUser]));
-  } catch (error) {
-    res.status(400).json(new RespondFormat(false, error.message));
+      .status(200)
+      .json(new RespondFormat(true, 'Nothing to update', [currentUser]));
   }
+
+  let updateObj = {};
+  if (req.body.name !== null && req.body.name !== undefined) {
+    Object.assign(updateObj, { name: new String(req.body.name).trim() });
+  } else {
+    Object.assign(updateObj, { name: currentUser.name });
+  }
+
+  if (req.body.password !== null && req.body.password !== undefined) {
+    Object.assign(updateObj, {
+      password: new String(req.body.password).trim(),
+    });
+  } else {
+    Object.assign(updateObj, { password: currentUser.password });
+  }
+
+  if (Object.keys(updateObj).length === 0) {
+    res
+      .status(200)
+      .json(new RespondFormat(true, 'Nothing to update 2', [currentUser]));
+  }
+
+  const updatesUser = await User.findOneAndUpdate(
+    { email: req.user.email },
+    updateObj,
+  );
+
+  if (updatesUser === null) {
+    res.status(400).json(new RespondFormat(false, 'Fail'));
+  }
+
+  res
+    .status(201)
+    .send(
+      new RespondFormat(true, 'Updated', [
+        await User.findOne({ email: req.user.email }),
+      ]),
+    );
 };
 
 exports.deleteUser = async (req, res) => {

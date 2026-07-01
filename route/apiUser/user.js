@@ -1,11 +1,9 @@
 const RespondFormat = require('../../respondFormat.js');
 const userController = require('../../controller/user.js');
-const ticketController = require('../../controller/ticket.js')
+const ticketController = require('../../controller/ticket.js');
 const authMiddleware = require('../../middleware/auth.js');
 
 const router = require('express').Router();
-
-router.post('/user/login', authMiddleware.userToken);
 
 router.get(
   '/currentUser',
@@ -14,15 +12,9 @@ router.get(
 );
 
 router.put(
-  '/currentUser/name',
+  '/currentUser',
   authMiddleware.verifyUserToken,
-  userController.putCurrentUserName,
+  userController.putCurrentUser,
 );
-
-router.put(
-  '/currentUser/password',
-  authMiddleware.verifyUserToken,
-  userController.putCurrentUserPassword
-)
 
 module.exports = router;

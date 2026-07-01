@@ -52,8 +52,7 @@ exports.userToken = async (req, res) => {
   userToken = jwt.sign({ email: user.email, name: user.name }, config.secret, {
     expiresIn: config.expiresIn,
   });
-
-  res.json(new RespondFormat(true, 'Login berhasil'));
+  res.status(200).json(new RespondFormat(true, 'Login berhasil'));
 };
 
 exports.verifyUserToken = (req, res, next) => {
